@@ -30,17 +30,6 @@ export const ProductProvider: React.FC<ProductProviderProps> = ({ children }) =>
   const { mutate: deleteProduct } = useMutationDeleteProduct()
   const { mutate: upsertProduct } = useMutationUpsertProduct()
 
-  const handleUpsertProduct = React.useCallback(
-    async (product: Product) => {
-      const id = product._id === 'create' ? (products ? products.length + 1 : 1) : product._id
-      const createdAt = product._id === 'create' ? new Date().toISOString() : product.created_at
-      await upsertProduct({ ...product, _id: id, created_at: createdAt })
-      handleCloseModal()
-      refetch()
-    },
-    [upsertProduct]
-  )
-
   const handleOpenModal = React.useCallback(
     (product?: Product) => {
       setModalState({ type: product ? 'edit' : 'create', product })
@@ -51,6 +40,17 @@ export const ProductProvider: React.FC<ProductProviderProps> = ({ children }) =>
   const handleCloseModal = React.useCallback(() => {
     setModalState({ type: 'closed' })
   }, [setModalState])
+
+  const handleUpsertProduct = React.useCallback(
+    async (product: Product) => {
+      const id = product._id === 'create' ? (products ? products.length + 1 : 1) : product._id
+      const createdAt = product._id === 'create' ? new Date().toISOString() : product.created_at
+      await upsertProduct({ ...product, _id: id, created_at: createdAt })
+      handleCloseModal()
+      refetch()
+    },
+    [handleCloseModal, products, refetch, upsertProduct]
+  )
 
   const handleDeleteProduct = React.useCallback(
     (id: string) => {
