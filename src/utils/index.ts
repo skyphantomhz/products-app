@@ -3,7 +3,7 @@ const formatDate = (dateString: string) => {
 }
 
 const formatCurrency = (price: string) => {
-  const numericPrice = parseFloat(price.replace(/[^0-9.-]+/g, ''))
+  const numericPrice = parseFloat(price)
 
   if (isNaN(numericPrice)) {
     return price
